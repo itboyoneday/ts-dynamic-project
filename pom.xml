@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.5.5</version>
+    </parent>
+    <groupId>com.tsingsoft</groupId>
+    <artifactId>ts-dynamic-project</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>ts-dynamic-project</name>
+    <description>Spring Boot 动态任務插件</description>
+    <packaging>pom</packaging>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <hutool.version>5.7.12</hutool.version>
+        <mybatis.plus.version>3.5.1</mybatis.plus.version>
+        <lombok.version>1.18.16</lombok.version>
+        <druid.version>1.1.22</druid.version>
+        <spring-boot.version>2.3.8.RELEASE</spring-boot.version>
+        <mysql.connector.version>8.0.27</mysql.connector.version>
+
+        <tomcat.version>9.0.64</tomcat.version>
+    </properties>
+
+    <modules>
+        <module>ts-server-executor</module>
+        <module>ts-jobs</module>
+    </modules>
+</project>

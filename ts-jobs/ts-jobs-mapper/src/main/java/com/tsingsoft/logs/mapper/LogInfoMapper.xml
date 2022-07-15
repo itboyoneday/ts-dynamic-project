@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tsingsoft.logs.mapper.LogInfoMapper">
+    <resultMap id="BaseResultMap" type="com.tsingsoft.logs.entity.LogInfo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="menu" property="menu" jdbcType="VARCHAR"/>
+        <result column="opt" property="opt" jdbcType="VARCHAR"/>
+        <result column="uri" property="uri" jdbcType="VARCHAR"/>
+        <result column="os" property="os" jdbcType="VARCHAR"/>
+        <result column="browser" property="browser" jdbcType="VARCHAR"/>
+        <result column="crt_time" property="crtTime" jdbcType="TIMESTAMP"/>
+        <result column="upd_time" property="updTime" jdbcType="TIMESTAMP"/>
+        <result column="crt_user" property="crtUser" jdbcType="VARCHAR"/>
+        <result column="crt_name" property="crtName" jdbcType="VARCHAR"/>
+        <result column="crt_host" property="crtHost" jdbcType="VARCHAR"/>
+        <result column="crt_args" property="crtArgs" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="event_type" property="eventType" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="batchInser" parameterType="com.tsingsoft.logs.entity.LogInfo">
+        insert into base_log
+        (id,menu,opt,uri,os,browser,crt_time,crt_user,crt_name,crt_host)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id},#{item.menu}, #{item.opt}, #{item.uri}, #{item.os}, #{item.browser}, #{item.crtTime}, #{item.crtUser}, #{item.crtName}, #{item.crtHost})
+        </foreach>
+    </insert>
+
+    <select id="findListByName" parameterType="string" resultMap="BaseResultMap">
+        select id,menu,opt,uri,os,browser,crt_time,crt_user,crt_name,crt_host,crt_args,event_type
+        from base_log where 1=1
+        <if test="title != null and title != ''">
+         and (
+            MENU  like  CONCAT('%',#{title},'%') or `opt`  like  CONCAT('%',#{title},'%') or crt_name like
+            CONCAT('%',#{title},'%')
+            )
+        </if>
+        order by upd_time desc
+    </select>
+
+    <select id="findLogByCrtTime" resultMap="BaseResultMap">
+        select id,
+               menu,
+               opt,
+               uri,
+               os,
+               browser,
+               crt_time,
+               crt_user,
+               crt_name,
+               crt_host,
+               crt_args
+        from base_log
+        where crt_time = #{crtTime}
+
+    </select>
+    <select id="findAllByTime" resultType="com.tsingsoft.logs.entity.LogInfo" resultMap="BaseResultMap">
+        select id,menu,opt,uri,os,browser,crt_time,crt_user,crt_name,upd_time,crt_host,crt_args,event_type,type
+        from base_log where 1=1
+        <if test="ids !=null and ids.length>0 ">
+            and id in
+            <foreach collection="ids" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by id desc
+    </select>
+
+
+    <select id="findLogByUpdTime" resultMap="BaseResultMap">
+        select id,
+               menu,
+               opt,
+               uri,
+               os,
+               browser,
+               crt_time,
+               crt_user,
+               crt_name,
+               crt_host,
+               crt_args,
+               `type`,
+               event_type
+        from base_log
+        where DATE_FORMAT(upd_time, '%Y-%m-%d') = DATE_FORMAT(#{updTime}
+            , '%Y-%m-%d')
+    </select>
+
+    <delete id="deleteLogByUpdTime">
+        delete from base_log  where  DATE_FORMAT(upd_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{updTime}
+            , '%Y-%m-%d')
+    </delete>
+
+    <insert id="insertLog">
+        insert into base_log
+        (menu, opt, uri, os, browser, crt_time, crt_user, crt_name, crt_host, description, upd_time, crt_user_id,
+         upd_user_id, del_flag, `type`, event_type)
+        values (#{menu}, #{opt}, #{uri}, #{os}, #{browser}, #{crtTime}, #{crtUser}, #{crtName}, #{crtHost},
+                #{description}, #{updTime}, #{crtUserId}, #{updUserId}, #{delFlag}, #{type}, #{eventType})
+
+    </insert>
+
+</mapper>

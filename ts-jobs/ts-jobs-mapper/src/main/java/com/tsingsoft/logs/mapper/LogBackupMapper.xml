@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tsingsoft.logs.mapper.LogBackupMapper">
+    <resultMap id="BaseResultMap" type="com.tsingsoft.logs.entity.LogBackup">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="menu" property="menu" jdbcType="VARCHAR"/>
+        <result column="opt" property="opt" jdbcType="VARCHAR"/>
+        <result column="uri" property="uri" jdbcType="VARCHAR"/>
+        <result column="os" property="os" jdbcType="VARCHAR"/>
+        <result column="event_type" property="eventType" jdbcType="VARCHAR"/>
+        <result column="browser" property="browser" jdbcType="VARCHAR"/>
+        <result column="crt_time" property="crtTime" jdbcType="TIMESTAMP"/>
+        <result column="crt_user" property="crtUser" jdbcType="VARCHAR"/>
+        <result column="crt_name" property="crtName" jdbcType="VARCHAR"/>
+        <result column="crt_host" property="crtHost" jdbcType="VARCHAR"/>
+        <result column="crt_args" property="crtArgs" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="batchInser" parameterType="com.tsingsoft.logs.entity.LogBackup">
+        insert into base_log_backup
+        (id,menu,opt,uri,os,browser,crt_time,crt_user,crt_name,crt_host,`type`,event_type )
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id},#{item.menu}, #{item.opt}, #{item.uri}, #{item.os}, #{item.browser}, #{item.crtTime},
+            #{item.crtUser}, #{item.crtName}, #{item.crtHost} ,#{item.type},#{item.eventType})
+        </foreach>
+        on duplicate key update
+        id = values(id) , menu = values(menu) , opt = values(opt) , uri = values(uri) , os = values(os) , crt_time =
+        values(crt_time) ,
+        crt_user = values(crt_user) , crt_name = values(crt_name) , crt_host = values(crt_host) , `type` =
+        values(`type`), `event_type` = values(`event_type`)
+    </insert>
+
+    <delete id="deleteLogBackupByUpdTime">
+        delete from base_log_backup  where  DATE_FORMAT(upd_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{updTime}
+            ,'%Y-%m-%d')
+    </delete>
+</mapper>
